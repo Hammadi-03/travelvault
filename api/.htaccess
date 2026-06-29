@@ -1,0 +1,7 @@
+Options -Indexes
+
+# Allow all PHP files to be accessed directly
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

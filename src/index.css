@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --surface: 0 0% 100%;
+    --border: 0 0% 90%;
+    --text-primary: 0 0% 0%;
+    --text-secondary: 0 0% 50%;
+    --accent: 0 0% 0%;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-black font-sans;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    @apply bg-gray-200 text-black;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white backdrop-blur-xl border border-gray-200;
+  }
+
+  .glass-strong {
+    @apply bg-white backdrop-blur-2xl border border-gray-200;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .masonry-grid {
+    column-fill: balance;
+  }
+}
