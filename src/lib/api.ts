@@ -20,6 +20,12 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY)
 }
 
+// ── Base URL ──────────────────────────────────────────────────
+// In dev, VITE_API_URL is empty and the Vite proxy forwards /api/* to Laravel.
+// In production, set VITE_API_URL to your Laravel origin (e.g. https://api.murjanlab.my.id)
+// so requests resolve correctly without a proxy.
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+
 // ── Core fetch ────────────────────────────────────────────────
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken()
@@ -38,7 +44,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers['Content-Type'] = 'application/json'
   }
 
-  const res = await fetch(`/${path}`, { ...options, headers })
+  const res = await fetch(`${API_BASE}/${path}`, { ...options, headers })
 
   if (!res.ok) {
     let message = `Request failed: ${res.status}`
@@ -139,7 +145,7 @@ export const mediaApi = {
       if (meta.duration != null) form.append('duration', String(meta.duration))
 
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', '/api/media')
+      xhr.open('POST', `${API_BASE}/api/media`)
       xhr.setRequestHeader('Accept', 'application/json')
       if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`)
 
