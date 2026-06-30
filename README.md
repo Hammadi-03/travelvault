@@ -99,7 +99,7 @@ dist
 VITE_API_URL=https://your-api.example.com
 ```
 
-5. Ensure the `public/_redirects` file is included so SPA routing works.
+5. Cloudflare Pages automatically handles single-page app routing when `assets.not_found_handling` is set to `single-page-application` in Wrangler config.
 
 ## Security
 

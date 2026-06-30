@@ -1,0 +1,1 @@
+The Cloudflare Pages deploy failed due to an invalid public/_redirects rule. Remove this file or change SPA routing to use Cloudflare Pages built-in single-page-application asset handling instead of `_redirects`.
