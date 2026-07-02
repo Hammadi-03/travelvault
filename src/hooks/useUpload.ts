@@ -17,6 +17,7 @@ export function useUpload(onSuccess?: () => void) {
   const { user } = useAuth()
   const [files, setFiles] = useState<UploadFile[]>([])
   const [uploading, setUploading] = useState(false)
+  const [location, setLocation] = useState('')
 
   const addFiles = useCallback((newFiles: File[]) => {
     const validated = newFiles.filter((file) => {
@@ -75,6 +76,7 @@ export function useUpload(onSuccess?: () => void) {
             width:    dimensions?.width  ?? null,
             height:   dimensions?.height ?? null,
             duration: duration           ?? null,
+            location: location || null,
           },
           (pct) => {
             setFiles((prev) =>
@@ -129,6 +131,8 @@ export function useUpload(onSuccess?: () => void) {
   return {
     files,
     uploading,
+    location,
+    setLocation,
     addFiles,
     removeFile,
     uploadAll,

@@ -69,6 +69,7 @@ class MediaController extends Controller
             'width'    => ['nullable', 'integer'],
             'height'   => ['nullable', 'integer'],
             'duration' => ['nullable', 'numeric'],
+            'location' => ['nullable', 'string', 'max:255'],
         ]);
 
         $file     = $request->file('file');
@@ -104,6 +105,7 @@ class MediaController extends Controller
             'duration'      => $request->filled('duration') ? (float) $request->input('duration') : null,
             'public_url'    => $publicUrl,
             'thumbnail_url' => $isImage ? $publicUrl : null,
+            'location'      => $request->input('location') ?: null,
             'created_at'    => now(),
         ]);
 
@@ -145,6 +147,7 @@ class MediaController extends Controller
             'duration'      => $m->duration,
             'public_url'    => $m->public_url,
             'thumbnail_url' => $m->thumbnail_url,
+            'location'      => $m->location,
             'created_at'    => $m->created_at?->toISOString(),
             'uploader'      => $uploader ? [
                 'id'           => $uploader->id,

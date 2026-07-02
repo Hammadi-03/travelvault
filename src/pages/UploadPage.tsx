@@ -11,6 +11,7 @@ import {
   CloudUpload,
   Trash2,
 } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useUpload } from '@/hooks/useUpload'
 import { PageLayout } from '@/components/layout/PageLayout'
@@ -22,7 +23,7 @@ import { cn } from '@/lib/utils'
 
 export function UploadPage() {
   const navigate = useNavigate()
-  const { files, uploading, addFiles, removeFile, uploadAll, clearCompleted, clearAll } =
+  const { files, uploading, location, setLocation, addFiles, removeFile, uploadAll, clearCompleted, clearAll } =
     useUpload(() => navigate('/gallery'))
 
   const onDrop = useCallback(
@@ -105,6 +106,25 @@ export function UploadPage() {
             ))}
             <Badge variant="default">Max 500 MB</Badge>
           </div>
+        </div>
+      </motion.div>
+
+      {/* Location input */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="mt-4"
+      >
+        <div className="flex items-center gap-2 border border-gray-200 rounded-2xl px-4 py-3 bg-white focus-within:border-black transition-colors">
+          <MapPin className="size-4 text-gray-400 shrink-0" />
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Add a place (e.g. Bali, Indonesia)"
+            className="flex-1 text-sm text-black placeholder-gray-400 outline-none bg-transparent"
+          />
         </div>
       </motion.div>
 

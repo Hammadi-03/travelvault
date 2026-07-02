@@ -133,7 +133,7 @@ export const mediaApi = {
 
   upload: (
     file: File,
-    meta: { width?: number | null; height?: number | null; duration?: number | null },
+    meta: { width?: number | null; height?: number | null; duration?: number | null; location?: string | null },
     onProgress?: (pct: number) => void,
   ): Promise<MediaItemResponse> => {
     return new Promise((resolve, reject) => {
@@ -143,6 +143,7 @@ export const mediaApi = {
       if (meta.width    != null) form.append('width',    String(meta.width))
       if (meta.height   != null) form.append('height',   String(meta.height))
       if (meta.duration != null) form.append('duration', String(meta.duration))
+      if (meta.location)         form.append('location', meta.location)
 
       const xhr = new XMLHttpRequest()
       xhr.open('POST', `${API_BASE}/api/media`)
@@ -203,6 +204,7 @@ export interface MediaItemResponse {
   duration: number | null
   public_url: string
   thumbnail_url: string | null
+  location: string | null
   created_at: string
   uploader?: {
     id: string

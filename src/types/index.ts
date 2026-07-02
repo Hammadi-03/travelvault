@@ -20,6 +20,7 @@ export interface MediaItem {
   duration: number | null
   public_url: string
   thumbnail_url: string | null
+  location: string | null
   created_at: string
   uploader?: Profile
 }
@@ -33,6 +34,7 @@ export interface UploadFile {
   progress: number
   error?: string
   preview?: string
+  location?: string
 }
 
 export interface SearchFilters {

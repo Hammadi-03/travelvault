@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { Play, User } from 'lucide-react'
 import type { MediaItem } from '@/types'
 import { useAuth } from '@/context/AuthContext'
-import { formatBytes } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
 interface MediaCardProps {
@@ -44,7 +43,8 @@ export function MediaCard({ item, onOpen, onDelete, index = 0 }: MediaCardProps)
       layout
     >
       <div
-        className="relative overflow-hidden rounded-[32px] cursor-pointer border border-black/10 bg-white shadow-sm"
+        className="relative overflow-hidden cursor-pointer border border-black/10 bg-white shadow-sm"
+        style={{ borderRadius: '25px' }}
         onClick={() => onOpen(item)}
         role="button"
         tabIndex={0}
@@ -89,14 +89,16 @@ export function MediaCard({ item, onOpen, onDelete, index = 0 }: MediaCardProps)
         )}
 
         <div className="absolute bottom-5 left-5 right-5 opacity-100">
-          <div className="flex items-center justify-between gap-3 rounded-full bg-white/90 border border-black/10 px-4 py-3 backdrop-blur-sm">
+          <div className="flex items-center justify-between gap-3 rounded-2xl bg-white/90 border border-black/10 px-4 py-3 backdrop-blur-sm">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-black truncate">
-                {item.file_name}
+                {item.uploader?.display_name ?? 'Unknown'}
               </p>
-              <p className="text-xs text-gray-500 truncate">
-                {formatBytes(item.file_size)}
-              </p>
+              {item.location && (
+                <p className="text-xs text-gray-500 truncate">
+                  📍 {item.location}
+                </p>
+              )}
             </div>
             {isOwner && onDelete && (
               <button
