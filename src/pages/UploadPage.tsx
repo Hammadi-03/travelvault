@@ -48,7 +48,7 @@ export function UploadPage() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="mb-6"
+        className="mb-6 mt-12 text-center"
       >
         <h1 className="text-3xl font-bold text-black">
           Upload media

@@ -16,12 +16,26 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  html, body, * {
+    cursor: url('/cursor-default.svg') 0 0, auto;
+  }
+
+  a, button, [role="button"], label[for], select,
+  input[type="submit"], input[type="button"], input[type="reset"],
+  .cursor-pointer, [tabindex]:not([tabindex="-1"]) {
+    cursor: url('/cursor-pointer.svg') 14 0, pointer;
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-white text-black font-sans;
+    @apply text-black font-sans;
+    background-color: #e3cba8;
+    background-image: url('/bg-texture.png');
+    background-repeat: repeat;
+    background-size: 600px 600px;
     font-feature-settings: "cv11", "ss01";
   }
 

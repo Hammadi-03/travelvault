@@ -40,7 +40,7 @@ export function GalleryPage() {
     <PageLayout>
       {/* Header */}
       <motion.div
-        className="flex flex-col gap-4 mb-10"
+        className="flex flex-col gap-4 mb-10 mt-10"
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
@@ -52,7 +52,7 @@ export function GalleryPage() {
           <h1 className="text-5xl font-bold text-black leading-tight">
             Gallery
           </h1>
-          <p className="text-base text-gray-600 mt-4 max-w-2xl">
+          <p className="text-base text-gray-600 mt-4">
             Browse your collection in a calm, monochrome layout with large scrollable images.
           </p>
         </div>

@@ -28,10 +28,16 @@ export function PageLayout({
   return (
     <motion.main
       className={cn(
-        'min-h-screen pt-24 bg-white',
+        'min-h-screen pt-24',
         padding && 'px-4 sm:px-6 py-8',
         className
       )}
+      style={{
+        backgroundColor: '#e3cba8',
+        backgroundImage: "url('/bg-texture.png')",
+        backgroundRepeat: 'repeat',
+        backgroundSize: '600px 600px',
+      }}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
