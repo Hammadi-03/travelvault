@@ -201,7 +201,7 @@ class MediaController extends Controller
     {
         $media = Media::findOrFail($id);
 
-        if ($media->user_id !== $request->user()->id) {
+        if ($media->user_id != $request->user()->id) {
             return response()->json(['message' => 'Forbidden.'], 403);
         }
 

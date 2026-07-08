@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/context/AuthContext'
@@ -13,11 +13,14 @@ import { SearchPage } from '@/pages/SearchPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 
 function AppRoutes() {
+  const location = useLocation()
+  const isAuthPage = ['/login', '/signup', '/forgot-password'].includes(location.pathname)
+
   return (
     <>
-      <Navbar />
+      {!isAuthPage && <Navbar />}
       <AnimatePresence mode="wait">
-        <Routes>
+        <Routes location={location} key={location.pathname}>
           {/* Public */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />

@@ -1,0 +1,188 @@
+.masonry-list {
+  position: relative;
+  width: 100%;
+}
+
+.masonry-item {
+  position: absolute;
+  will-change: transform, width, height, opacity;
+  padding: 8px;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+}
+
+.masonry-item-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.18);
+  background-color: #f3f3f3;
+}
+
+.masonry-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+  transition: opacity 0.4s ease;
+}
+
+.masonry-item-heic {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #f8f8f8;
+  border-radius: 20px;
+}
+
+.masonry-item-heic-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ebebeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.masonry-item-heic-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #999;
+}
+
+.masonry-item-heic-sublabel {
+  font-size: 11px;
+  color: #bbb;
+  text-align: center;
+  padding: 0 12px;
+}
+
+/* Video play button overlay */
+.masonry-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+}
+
+/* Type badge (PHOTO / VIDEO) */
+.masonry-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(0,0,0,0.88);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 5px 12px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Bottom info bar */
+.masonry-info {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 8px 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.masonry-info-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.masonry-info-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.masonry-info-location {
+  font-size: 11px;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+/* Delete button — pointer-events: auto so it is clickable */
+.masonry-delete-btn {
+  pointer-events: auto;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.90);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  z-index: 4;
+}
+
+.masonry-delete-btn:hover {
+  background: #000;
+}
+
+/* Color shift overlay */
+.masonry-color-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,0,150,0.45), rgba(0,150,255,0.45));
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+/* Empty state */
+.masonry-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  color: #888;
+}

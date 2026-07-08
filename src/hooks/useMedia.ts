@@ -47,7 +47,7 @@ export function useMedia() {
 
   const deleteItem = useCallback(
     async (item: MediaItem) => {
-      if (!user || item.user_id !== user.id) throw new Error('Unauthorized')
+      if (!user || item.user_id != user.id) throw new Error('Unauthorized')
       await mediaApi.delete(item.id)
       setItems((prev) => prev.filter((m) => m.id !== item.id))
     },
