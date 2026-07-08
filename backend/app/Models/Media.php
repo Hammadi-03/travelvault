@@ -23,6 +23,7 @@ class Media extends Model
         'duration',
         'public_url',
         'thumbnail_url',
+        'webp_path',
         'location',
         'created_at',
     ];

@@ -17,7 +17,7 @@ import { useAuth } from '@/context/AuthContext'
 import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { formatBytes, formatDuration } from '@/lib/utils'
+import { formatBytes, formatDuration, resolveMediaUrl, isHeicFile } from '@/lib/utils'
 
 interface MediaViewerProps {
   item: MediaItem | null
@@ -67,8 +67,10 @@ export function MediaViewer({
 
   const handleDownload = async () => {
     if (!item) return
+    // Use the resolved (proxy-safe) URL so local dev can fetch through Vite
+    const downloadUrl = resolveMediaUrl(item.public_url)
     try {
-      const response = await fetch(item.public_url)
+      const response = await fetch(downloadUrl)
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -77,11 +79,13 @@ export function MediaViewer({
       a.click()
       URL.revokeObjectURL(url)
     } catch {
-      window.open(item?.public_url, '_blank')
+      window.open(downloadUrl, '_blank')
     }
   }
 
   const isOwner = item && user?.id === item.user_id
+  const isHeic = isHeicFile(item?.mime_type)
+  const resolvedUrl = resolveMediaUrl(item?.public_url)
 
   return (
     <AnimatePresence>
@@ -180,15 +184,36 @@ export function MediaViewer({
                 onClick={(e) => e.stopPropagation()}
               >
                 {item.file_type === 'image' ? (
-                  <img
-                    src={item.public_url}
-                    alt={item.file_name}
-                    className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
-                    draggable={false}
-                  />
+                  isHeic ? (
+                    // HEIC files cannot render in the browser — offer a download instead
+                    <div className="flex flex-col items-center justify-center gap-5 p-10 rounded-2xl bg-white/5 border border-white/10">
+                      <Download className="size-12 text-white/40" />
+                      <div className="text-center">
+                        <p className="text-sm font-semibold text-white/80 mb-1">HEIC format</p>
+                        <p className="text-xs text-white/40 max-w-xs">
+                          This format isn&apos;t supported by browsers. Download the file to view it in Photos or another app.
+                        </p>
+                      </div>
+                      <a
+                        href={resolvedUrl}
+                        download={item.file_name}
+                        className="flex items-center gap-2 rounded-full bg-white text-black text-sm font-semibold px-6 py-2.5 hover:bg-white/90 transition-colors"
+                      >
+                        <Download className="size-4" />
+                        Download {item.file_name}
+                      </a>
+                    </div>
+                  ) : (
+                    <img
+                      src={resolvedUrl}
+                      alt={item.file_name}
+                      className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
+                      draggable={false}
+                    />
+                  )
                 ) : (
                   <video
-                    src={item.public_url}
+                    src={resolvedUrl}
                     controls
                     autoPlay
                     className="max-w-full max-h-[85vh] rounded-xl shadow-2xl"
@@ -242,8 +267,18 @@ export function MediaViewer({
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="p-5 pt-16">
-                  <h3 className="text-sm font-semibold text-white mb-4">File Info</h3>
+                <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/10 flex items-center justify-between px-5 py-4">
+                  <h3 className="text-sm font-semibold text-zinc-900">File Info</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowInfo(false)}
+                    className="size-7 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-800"
+                    aria-label="Close info panel"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+                <div className="p-5">
 
                   <div className="space-y-3">
                     <InfoRow icon={<FileType className="size-3.5" />} label="Name">
@@ -304,10 +339,10 @@ function InfoRow({
 }) {
   return (
     <div className="flex gap-2.5">
-      <div className="text-white/40 mt-0.5">{icon}</div>
+      <div className="text-zinc-500 mt-0.5">{icon}</div>
       <div>
-        <p className="text-xs text-white/40 mb-0.5">{label}</p>
-        <p className="text-xs text-white/80">{children}</p>
+        <p className="text-xs text-zinc-500 mb-0.5">{label}</p>
+        <p className="text-xs text-zinc-800 break-words">{children}</p>
       </div>
     </div>
   )

@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Play, User } from 'lucide-react'
+import { Play, User, Download } from 'lucide-react'
 import type { MediaItem } from '@/types'
 import { useAuth } from '@/context/AuthContext'
-import { cn } from '@/lib/utils'
+import { cn, resolveMediaUrl, isHeicFile } from '@/lib/utils'
 
 interface MediaCardProps {
   item: MediaItem
@@ -19,7 +19,8 @@ export function MediaCard({ item, onOpen, onDelete, index = 0 }: MediaCardProps)
 
   const isOwner = user?.id === item.user_id
   const isVideo = item.file_type === 'video'
-  const thumbUrl = item.thumbnail_url || item.public_url
+  const isHeic = isHeicFile(item.mime_type)
+  const thumbUrl = resolveMediaUrl(item.thumbnail_url || item.public_url)
 
   const handleDelete = useCallback(
     (e: React.MouseEvent) => {
@@ -55,7 +56,18 @@ export function MediaCard({ item, onOpen, onDelete, index = 0 }: MediaCardProps)
           {isVideo ? 'Video' : 'Photo'}
         </div>
 
-        {!imageError ? (
+        {isHeic ? (
+          // HEIC — browsers cannot render this format. Show a clean download prompt.
+          <div className="aspect-[4/5] w-full flex flex-col items-center justify-center gap-3 bg-gray-50">
+            <div className="size-14 rounded-full bg-gray-100 flex items-center justify-center">
+              <Download className="size-6 text-gray-400" />
+            </div>
+            <div className="text-center px-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">HEIC Image</p>
+              <p className="text-xs text-gray-400">Click to download</p>
+            </div>
+          </div>
+        ) : !imageError ? (
           <img
             src={thumbUrl}
             alt={item.file_name}
@@ -69,12 +81,12 @@ export function MediaCard({ item, onOpen, onDelete, index = 0 }: MediaCardProps)
             )}
           />
         ) : (
-          <div className="aspect-[4/5] w-full flex items-center justify-center bg-gray-300">
-            <User className="size-8 text-gray-500" />
+          <div className="aspect-[4/5] w-full flex items-center justify-center bg-gray-100">
+            <User className="size-8 text-gray-400" />
           </div>
         )}
 
-        {!imageLoaded && !imageError && (
+        {!isHeic && !imageLoaded && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/90">
             <div className="size-12 rounded-full border-2 border-gray-200 animate-pulse" />
           </div>

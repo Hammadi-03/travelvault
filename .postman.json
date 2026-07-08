@@ -1,0 +1,364 @@
+{
+  "workspaceId": "",
+  "collectionId": "",
+  "environmentId": "",
+  "collection": {
+    "info": {
+      "name": "TravelVault API",
+      "description": "Full API collection for the TravelVault Laravel + Sanctum backend.\nBase URL is controlled by the `base_url` environment variable.\n\nAuth flow:\n1. Run `Register` or `Login` — the test script saves the token automatically.\n2. All protected routes use the `{{token}}` variable set by those scripts.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      { "key": "base_url", "value": "http://localhost:8000", "type": "string" }
+    ],
+    "item": [
+      {
+        "name": "Auth",
+        "item": [
+          {
+            "name": "Register",
+            "request": {
+              "method": "POST",
+              "header": [{ "key": "Accept", "value": "application/json" }],
+              "url": { "raw": "{{base_url}}/api/register", "host": ["{{base_url}}"], "path": ["api", "register"] },
+              "body": {
+                "mode": "raw",
+                "options": { "raw": { "language": "json" } },
+                "raw": "{\n  \"display_name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Password1!\",\n  \"password_confirmation\": \"Password1!\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                    "pm.test('Returns token', () => {",
+                    "  const body = pm.response.json();",
+                    "  pm.expect(body).to.have.property('token');",
+                    "  pm.expect(body).to.have.property('user');",
+                    "  pm.collectionVariables.set('token', body.token);",
+                    "  pm.collectionVariables.set('user_id', body.user.id);",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Login",
+            "request": {
+              "method": "POST",
+              "header": [{ "key": "Accept", "value": "application/json" }],
+              "url": { "raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"] },
+              "body": {
+                "mode": "raw",
+                "options": { "raw": { "language": "json" } },
+                "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password1!\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Returns token', () => {",
+                    "  const body = pm.response.json();",
+                    "  pm.expect(body).to.have.property('token');",
+                    "  pm.expect(body).to.have.property('user');",
+                    "  pm.collectionVariables.set('token', body.token);",
+                    "  pm.collectionVariables.set('user_id', body.user.id);",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Forgot Password",
+            "request": {
+              "method": "POST",
+              "header": [{ "key": "Accept", "value": "application/json" }],
+              "url": { "raw": "{{base_url}}/api/forgot-password", "host": ["{{base_url}}"], "path": ["api", "forgot-password"] },
+              "body": {
+                "mode": "raw",
+                "options": { "raw": { "language": "json" } },
+                "raw": "{\n  \"email\": \"test@example.com\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Returns status', () => {",
+                    "  const body = pm.response.json();",
+                    "  pm.expect(body).to.have.property('status');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Get Current User",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": { "raw": "{{base_url}}/api/user", "host": ["{{base_url}}"], "path": ["api", "user"] }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('User shape valid', () => {",
+                    "  const u = pm.response.json();",
+                    "  pm.expect(u).to.have.keys(['id','email','display_name','avatar_url','created_at','updated_at']);",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Logout",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": { "raw": "{{base_url}}/api/logout", "host": ["{{base_url}}"], "path": ["api", "logout"] }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Message present', () => {",
+                    "  pm.expect(pm.response.json()).to.have.property('message');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Profile",
+        "item": [
+          {
+            "name": "Update Profile",
+            "request": {
+              "method": "PUT",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": { "raw": "{{base_url}}/api/profile", "host": ["{{base_url}}"], "path": ["api", "profile"] },
+              "body": {
+                "mode": "raw",
+                "options": { "raw": { "language": "json" } },
+                "raw": "{\n  \"display_name\": \"Updated Name\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('display_name updated', () => {",
+                    "  pm.expect(pm.response.json().display_name).to.eql('Updated Name');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Upload Avatar",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": { "raw": "{{base_url}}/api/profile/avatar", "host": ["{{base_url}}"], "path": ["api", "profile", "avatar"] },
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  { "key": "avatar", "type": "file", "src": "", "description": "Image file (max 5 MB)" }
+                ]
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Returns avatar_url', () => {",
+                    "  pm.expect(pm.response.json()).to.have.property('avatar_url');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Media",
+        "item": [
+          {
+            "name": "List Media",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/media?page=0",
+                "host": ["{{base_url}}"],
+                "path": ["api", "media"],
+                "query": [{ "key": "page", "value": "0" }]
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Returns array', () => {",
+                    "  pm.expect(pm.response.json()).to.be.an('array');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Search Media",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/media/search?q=beach&file_type=image&page=0",
+                "host": ["{{base_url}}"],
+                "path": ["api", "media", "search"],
+                "query": [
+                  { "key": "q", "value": "beach" },
+                  { "key": "file_type", "value": "image" },
+                  { "key": "page", "value": "0" }
+                ]
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Returns total + items', () => {",
+                    "  const body = pm.response.json();",
+                    "  pm.expect(body).to.have.property('total');",
+                    "  pm.expect(body).to.have.property('items');",
+                    "  pm.expect(body.items).to.be.an('array');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Upload Media",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": { "raw": "{{base_url}}/api/media", "host": ["{{base_url}}"], "path": ["api", "media"] },
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  { "key": "file", "type": "file", "src": "", "description": "Image or video (max 500 MB)" },
+                  { "key": "width", "value": "1920", "type": "text" },
+                  { "key": "height", "value": "1080", "type": "text" },
+                  { "key": "location", "value": "Bali, Indonesia", "type": "text" }
+                ]
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                    "pm.test('Media shape valid', () => {",
+                    "  const m = pm.response.json();",
+                    "  pm.expect(m).to.have.keys(['id','user_id','file_name','file_path','file_type','mime_type','file_size','width','height','duration','public_url','thumbnail_url','location','created_at','uploader']);",
+                    "  pm.collectionVariables.set('media_id', m.id);",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "Delete Media",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "Accept", "value": "application/json" },
+                { "key": "Authorization", "value": "Bearer {{token}}" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/media/{{media_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["api", "media", "{{media_id}}"]
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                    "pm.test('Deleted message', () => {",
+                    "  pm.expect(pm.response.json().message).to.eql('Deleted.');",
+                    "});"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "environment": {
+    "name": "TravelVault Local",
+    "values": [
+      { "key": "base_url", "value": "http://localhost:8000", "enabled": true },
+      { "key": "token", "value": "", "enabled": true },
+      { "key": "user_id", "value": "", "enabled": true },
+      { "key": "media_id", "value": "", "enabled": true }
+    ]
+  }
+}

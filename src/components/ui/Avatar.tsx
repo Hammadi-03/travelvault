@@ -1,4 +1,4 @@
-import { cn, getInitials } from '@/lib/utils'
+import { cn, getInitials, resolveMediaUrl } from '@/lib/utils'
 
 interface AvatarProps {
   src?: string | null
@@ -19,9 +19,10 @@ export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
   const initials = getInitials(name)
 
   if (src) {
+    const resolvedSrc = resolveMediaUrl(src)
     return (
       <img
-        src={src}
+        src={resolvedSrc}
         alt={name}
         className={cn(
           'rounded-full object-cover shrink-0 ring-2 ring-white/50',

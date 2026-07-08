@@ -5,6 +5,35 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Strips the production API origin from a storage URL so the Vite dev-server
+ * proxy can forward it to Laravel at 127.0.0.1:8000.
+ * e.g. "https://api.murjanlab.my.id/storage/9/file.heic" → "/storage/9/file.heic"
+ * In production VITE_API_URL is set, so URLs already point at the right host.
+ */
+const API_ORIGIN = (import.meta.env.VITE_API_URL as string | undefined)?.trim().replace(/\/$/, '') ?? ''
+
+export function resolveMediaUrl(url: string | null | undefined): string {
+  if (!url) return ''
+  // In production the full URL is correct as-is
+  if (API_ORIGIN) return url
+  // In dev: strip the production origin so the proxy takes over
+  try {
+    const parsed = new URL(url)
+    return parsed.pathname + parsed.search
+  } catch {
+    return url
+  }
+}
+
+/** Returns true for HEIC/HEIF files — browsers cannot render these natively */
+export function isHeicFile(mimeType: string | null | undefined): boolean {
+  if (!mimeType) return false
+  const m = mimeType.toLowerCase()
+  return m === 'image/heic' || m === 'image/heif'
+}
+
+
 export function formatBytes(bytes: number, decimals = 2): string {
   if (bytes === 0) return '0 B'
   const k = 1024

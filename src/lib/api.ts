@@ -24,7 +24,7 @@ export function clearToken(): void {
 // In dev, VITE_API_URL is empty and the Vite proxy forwards /api/* to Laravel.
 // In production, set VITE_API_URL to your Laravel origin (e.g. https://api.murjanlab.my.id)
 // so requests resolve correctly without a proxy.
-const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.trim().replace(/\/$/, '') ?? ''
 
 // ── Core fetch ────────────────────────────────────────────────
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -44,7 +44,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers['Content-Type'] = 'application/json'
   }
 
-  const res = await fetch(`${API_BASE}/${path}`, { ...options, headers })
+  const res = await fetch(API_BASE ? `${API_BASE}/${path}` : `/${path}`, { ...options, headers })
 
   if (!res.ok) {
     let message = `Request failed: ${res.status}`
